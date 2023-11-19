@@ -53,8 +53,9 @@ if(isset($_POST['save'])){
         if(isset($_POST['update'])){
     
             $className=$_POST['className'];
-        
-            $query=mysqli_query($conn,"update tblclass set className='$className' where Id='$Id'");
+            $classYear=$_POST['classYear'];
+            $classBatch=$_POST['classBatch'];
+            $query=mysqli_query($conn,"update tblclass set className='$className', classYear='$classYear' ,classBatch='$classBatch' where Id='$Id'");
 
             if ($query) {
                 
@@ -146,6 +147,16 @@ if(isset($_POST['save'])){
                             <label class="form-control-label">Class Name<span class="text-danger ml-2">*</span></label>
                       <input type="text" class="form-control" name="className" value="<?php echo $row['className'];?>" id="exampleInputFirstName" placeholder="Class Name">
                         </div>
+                        &nbsp;&nbsp;&nbsp;
+                        <div class="col-xl-6">
+                            <label class="form-control-label">Class Year<span class="text-danger ml-2">*</span></label>
+                      <input type="text" class="form-control" name="classYear" value="<?php echo $row['classYear'];?>" id="exampleInputFirstName" placeholder="Class Year">
+                        </div>
+                        &nbsp;&nbsp;&nbsp;
+                        <div class="col-xl-6">
+                            <label class="form-control-label">Class Batch<span class="text-danger ml-2">*</span></label>
+                      <input type="text" class="form-control" name="classBatch" value="<?php echo $row['classBatch'];?>" id="exampleInputFirstName" placeholder="Class Batch">
+                        </div>
                     </div>
                       <?php
                     if (isset($Id))
@@ -177,6 +188,8 @@ if(isset($_POST['save'])){
                       <tr>
                         <th>#</th>
                         <th>Class Name</th>
+                        <th>Class Year</th>
+                        <th>Class Batch</th>
                         <th>Edit</th>
                         <th>Delete</th>
                       </tr>
@@ -198,6 +211,8 @@ if(isset($_POST['save'])){
                               <tr>
                                 <td>".$sn."</td>
                                 <td>".$rows['className']."</td>
+                                <td>".$rows['classYear']."</td>
+                                <td>".$rows['classBatch']."</td>
                                 <td><a href='?action=edit&Id=".$rows['Id']."'><i class='fas fa-fw fa-edit'></i>Edit</a></td>
                                 <td><a href='?action=delete&Id=".$rows['Id']."'><i class='fas fa-fw fa-trash'></i>Delete</a></td>
                               </tr>";
