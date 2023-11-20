@@ -242,10 +242,26 @@ if(isset($_POST['save'])){
                         </div>
                         <div class="col-xl-6">
                         <label class="form-control-label">Section<span class="text-danger ml-2">*</span></label>
-                            <?php
-                                echo"<div id='txtHint'></div>";
-                            ?>
+                         <?php
+                        $qry= "SELECT * FROM tblclassarms ORDER BY classArmName ASC";
+                        $result = $conn->query($qry);
+                        $num = $result->num_rows;		
+                        if ($num > 0){
+                          echo ' <select required name="classId" onchange="classArmDropdown(this.value)" class="form-control mb-3">';
+                          echo'<option value="">--Select Class--</option>';
+                          while ($rows = $result->fetch_assoc()){
+                          echo'<option value="'.$rows['Id'].'" >'.$rows['classArmName'].'</option>';
+                              }
+                                  echo '</select>';
+                              }
+                            ?>  
                         </div>
+                        <!-- <div class="col-xl-6">
+                        <label class="form-control-label">Section<span class="text-danger ml-2">*</span></label>
+                             <?php
+                                // echo"<div id='txtHint'></div>";
+                            ?> 
+                        </div> -->
                     </div>
                       <?php
                     if (isset($Id))
