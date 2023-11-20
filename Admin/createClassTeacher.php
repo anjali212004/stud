@@ -4,6 +4,25 @@ error_reporting(0);
 include '../Includes/dbcon.php';
 include '../Includes/session.php';
 
+function getClassId($conn, $className) {
+  $query = mysqli_query($conn, "SELECT Id FROM tblclass WHERE className = '$className'");
+  $row = mysqli_fetch_assoc($query);
+
+  if ($row) {
+      return $row['Id'];
+  } else {
+      // If class name not found, you might want to handle this case
+      return null;
+  }
+}
+function getClassArmId($conn, $classArmName)
+{
+    $classArmQuery = mysqli_query($conn, "SELECT Id FROM tblclassarms WHERE classArmName = '$classArmName'");
+    $classArmRow = mysqli_fetch_assoc($classArmQuery);
+    return $classArmRow['Id'];
+}
+
+
 //------------------------SAVE--------------------------------------------------
 
 if(isset($_POST['save'])){
@@ -52,11 +71,64 @@ if(isset($_POST['save'])){
 }
 
 //---------------------------------------EDIT-------------------------------------------------------------
+//excel
+require 'vendor/autoload.php';
+
+use PhpOffice\PhpSpreadsheet\IOFactory;
+
+if (isset($_POST['save_excel_data'])) {
+  $file = $_FILES['import_file']['tmp_name'];
+  $file_ext = pathinfo($_FILES['import_file']['name'], PATHINFO_EXTENSION);
+
+  if ($file_ext == 'xlsx' || $file_ext == 'xls' || $file_ext == 'csv') {
+      try {
+          $obj = IOFactory::load($file);
+          $data = $obj->getActiveSheet()->toArray();
+          $dateCreated = date("Y-m-d");
+          $sampPass = "pass123";
+          $sampPass_2 = md5($sampPass);
+          
+
+          foreach ($data as $row) {
+              if (!empty($row['0']) && !empty($row['1']) && !empty($row['2']) && !empty($row['3']) && !empty($row['4'])) {
+                  $firstName = $row['0'];
+                  $lastName = $row['1'];
+                  $emailAddress = $row['2'];
+                  $phoneNo = $row['3'];
+                  $className = $row['4'];
+                  $classArmName = $row['5'];
+                  $classId = getClassId($conn, $className);
+                  $classArmId = getClassArmId($conn, $classArmName);
+                  
+
+                  $insert_query = mysqli_query($conn, "INSERT into tblclassteacher(firstName,lastName,emailAddress,password,phoneNo,classId,classArmId,dateCreated) 
+                  value('$firstName','$lastName','$emailAddress','$sampPass_2','$phoneNo','$classId','$classArmId','$dateCreated')");
+
+                  if (!$insert_query) {
+                      throw new Exception(mysqli_error($conn));
+                  }
+              } else {
+                  throw new Exception("Missing data in the Excel file");
+              }
+          }
 
 
+          $msg = "File imported successfully";
+      } catch (Exception $e) {
+          $msg = "Error: " . $e->getMessage();
+      }
+  } else {
+      $msg = "Invalid file format. Please upload an Excel file (xlsx, xls, csv).";
+  }
+
+  echo "Debug Message: " . $msg;  // Add this line for debugging
+
+  header("Location: createClassTeacher.php?msg=" . urlencode($msg));
+  exit;
+}
 
 
-
+//excel
 
 //--------------------EDIT------------------------------------------------------------
 
@@ -256,11 +328,16 @@ if(isset($_POST['save'])){
                     <?php
                     } else {           
                     ?>
-                    <button type="submit" name="save" class="btn btn-primary">Save</button>
+                    <button type="submit" name="save" class="btn btn-primary mb-3">Save</button>
+                    </form>
                     <?php
                     }         
                     ?>
-                  </form>
+                    <form method ="POST"  enctype="multipart/form-data">
+                      <input type="file" name ="import_file" class="form-control"/>
+                      <input type="submit" name="save_excel_data" value ="Import" class="btn btn-primary mt-3"/>
+                    </form>
+                  
                 </div>
               </div>
 
