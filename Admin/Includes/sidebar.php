@@ -41,6 +41,20 @@
              </div>
          </div>
      </li>
+     <!-- Adding subject here update for it students -->
+     <li class="nav-item">
+         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBootstrapusers" aria-expanded="true" aria-controls="collapseBootstrapusers">
+             <i class="fas fa-code-branch"></i>
+             <span>Manage Subject</span>
+         </a>
+         <div id="collapseBootstrapusers" class="collapse" aria-labelledby="headingBootstrap" data-parent="#accordionSidebar">
+             <div class="bg-white py-2 collapse-inner rounded">
+                 <h6 class="collapse-header">Manage Subject</h6>
+                 <a class="collapse-item" href="createSubject.php">Create Subject</a>
+                 <!-- <a class="collapse-item" href="usersList.php">User List</a> -->
+             </div>
+         </div>
+     </li>
      <hr class="sidebar-divider">
      <div class="sidebar-heading">
          Teachers
@@ -54,6 +68,7 @@
              <div class="bg-white py-2 collapse-inner rounded">
                  <h6 class="collapse-header">Manage Class Teachers</h6>
                  <a class="collapse-item" href="createClassTeacher.php">Create Class Teachers</a>
+                 <a class="collapse-item" href="createTeacher.php">Create Teachers</a>
                  <!-- <a class="collapse-item" href="assetsCategoryList.php">Assets Category List</a>
              <a class="collapse-item" href="createAssets.php">Create Assets</a> -->
              </div>
